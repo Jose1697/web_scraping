@@ -4,6 +4,7 @@ import psycopg2
 from configuration import *
 import webscraping_computrabajo
 import webscraping_indeed
+import webscraping_mipleo
 from controller import Controller
 from dbconnection import Connection
 
@@ -53,6 +54,18 @@ def set_url_busqueda_compuTrabajo(carga):
     carga["url_sufix"] = ""
     carga["url_busqueda"] = carga["url_principal"] + urlbusqueda    
 
+
+def set_url_busqueda_mipleo(carga,puesto):
+    #MODIFICADO URL MIPLEO
+    carga["url_principal"] = MIPLEO["WS_PORTAL_LABORAL_URL"]
+    urlbusqueda = "/ofertas-de-trabajo/empleos-lima/?q=" + puesto
+    print(urlbusqueda)
+    paginado = "&page=^"
+    carga["url_prefix"] = carga["url_principal"] + urlbusqueda + paginado
+    carga["url_sufix"] = ""
+    carga["url_busqueda"] = carga["url_principal"] + urlbusqueda 
+
+
 def connect_bd():
     con = Connection(DATABASE["DB_HOST"], DATABASE["DB_SERVICE"], DATABASE["DB_USER"], DATABASE["DB_PASSWORD"])
     con.connect()
@@ -93,7 +106,32 @@ def delati_indeed():
                                                carga["id_carga"])
     print(listaOferta)
 
+
+def delati_mipleo():
+    controller = Controller()
+    con = connect_bd()
+    carga = {}
+    carga["pagina"] = MIPLEO["WS_PORTAL_LABORAL"]
+    carga["cant_paginas"] = MIPLEO["WS_PAGINAS"]
+    carga["pagina_inicial"] = MIPLEO["WS_PAGINA_INICIAL"]
+    carga["cant_ofertas"] = MIPLEO["WS_OFERTAS"]
+    carga["busqueda_area"] = MIPLEO["WS_AREA"]
+    carga["busqueda"] = ""
+    lista_puestos = controller.buscar_cargos(con)
+    n_puestos = len(lista_puestos)
+    for i in range(n_puestos):
+        carga["id_keyword"] = i+1
+        set_url_busqueda_mipleo(carga,lista_puestos[i])
+        carga["id_carga"] = controller.registrar_webscraping(con, carga)
+
+        listaOferta = webscraping_mipleo.scraping_ofertas(con, carga["url_principal"], carga["url_prefix"], carga["url_sufix"],
+                                                carga["pagina_inicial"], carga["cant_paginas"], carga["cant_ofertas"],
+                                                carga["id_carga"])
+    print(listaOferta)
+
+
 if __name__ == "__main__":
+    delati_mipleo()
     #delati_compuTrabajo()
-    delati_indeed()
+    #delati_indeed()
 

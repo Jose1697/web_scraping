@@ -5,13 +5,31 @@ class DBWebscraping:
     def __init__(self):
         pass
 
+    def list_search(self,connection):
+        try:
+            list_items = []
+            mydb = connection.connect()
+            cur = mydb.cursor()                                    
+            sql = "select descripcion from keyword_search"
+            cur.execute(sql)
+            for fila in cur:
+                fila2=str(fila).replace("(","").replace(",)","").replace(" ","%20")
+                list_items.append(fila2)
+            cur.close()
+            mydb.close() 
+        except (Exception, psycopg2.DatabaseError) as error:                
+                print (error)
+                mydb.close()
+              
+        return list_items
+
     def insert_webscraping(self, connection, carga):
         try:
           mydb = connection.connect()         
           cur = mydb.cursor() 
           # insertando un registro
-          sql = "insert into webscraping (busqueda, busqueda_area, pagina_web, url_pagina, url_busqueda,fecha_creacion,fecha_modificacion) values (%s,%s,%s,%s,%s,current_date,current_date)"
-          params = (carga["busqueda"], carga["busqueda_area"], carga["pagina"], carga["url_principal"],carga["url_busqueda"])
+          sql = "insert into webscraping (busqueda, busqueda_area, pagina_web, url_pagina, url_busqueda,fecha_creacion,fecha_modificacion,id_keyword) values (%s,%s,%s,%s,%s,current_date,current_date,%s)"
+          params = (carga["busqueda"], carga["busqueda_area"], carga["pagina"], carga["url_principal"],carga["url_busqueda"],carga["id_keyword"])
                     
           cur.execute(sql, params)                 
 

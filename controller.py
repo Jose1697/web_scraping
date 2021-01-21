@@ -11,6 +11,10 @@ class Controller:
         self.dboferta = DBOferta()
         self.dbofertadetalle = DBOfertadetalle()
 
+    def buscar_cargos(self, con):
+        lista_d = self.dbwebscraping.list_search(con)
+        return lista_d
+
     def registrar_webscraping(self, con, webscraping):
         id = self.dbwebscraping.insert_webscraping(con, webscraping)
         return id

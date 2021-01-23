@@ -58,7 +58,7 @@ def set_url_busqueda_compuTrabajo(carga):
 def set_url_busqueda_mipleo(carga,puesto):
     #MODIFICADO URL MIPLEO
     carga["url_principal"] = MIPLEO["WS_PORTAL_LABORAL_URL"]
-    urlbusqueda = "/ofertas-de-trabajo/empleos-lima/?q=" + puesto
+    urlbusqueda = "/ofertas-de-trabajo/?q=" + puesto
     print(urlbusqueda)
     paginado = "&page=^"
     carga["url_prefix"] = carga["url_principal"] + urlbusqueda + paginado

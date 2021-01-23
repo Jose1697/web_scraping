@@ -1,4 +1,5 @@
-
+import re
+from unicodedata import normalize
 from urllib.request import urlopen
 from urllib.error import HTTPError
 import bs4
@@ -92,22 +93,37 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             soup_deta = BeautifulSoup(reqDeta.content.decode('utf-8','ignore'), "lxml")
 
             aviso_deta = aviso_deta = soup_deta.find("div", {"class": "description_item"})
-            if aviso_deta!=None:                                            
-                oferta["detalle"]=aviso_deta.get_text()
+            
+            if aviso_deta!=None:
+                str_aviso_deta =  aviso_deta.get_text()    
+                str_aviso_deta  = re.sub(
+                                        r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
+                                        normalize( "NFD", str_aviso_deta), 0, re.I
+                                    )
+                str_aviso_deta = normalize( 'NFC', str_aviso_deta)
+                str_aviso_deta =  " ".join(str_aviso_deta.split()).upper()
+                print(str_aviso_deta)                                   
+                oferta["detalle"]=str_aviso_deta
 
             lista_oferta.append(oferta)
             row = controller.registrar_oferta(con, oferta)
-
-            aviso_tupla = aviso_deta = soup_deta.find("div", {"class": "description_item"}).find("p")
             
-            cadena=str(aviso_tupla).replace("<p>","").replace("</p>","").split("<br/>")
+            aviso_tupla = aviso_deta = soup_deta.find("div", {"class": "description_item"}).find("p")
+            str_aviso_tupla = str(aviso_tupla)
+            str_aviso_tupla = re.sub(
+                                    r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", 
+                                    normalize( "NFD", str_aviso_tupla), 0, re.I
+                                )
+            str_aviso_tupla = normalize( 'NFC', str_aviso_tupla)
+
+            cadena=str_aviso_tupla.replace("<p>","").replace("</p>","").split("<br/>")
             for aviso in cadena:
                 a={}
                 if aviso.strip():
                     a["id_oferta"]= row
-                    a["descripcion"]=aviso.strip()
+                    a["descripcion"]=aviso.lstrip("- ").strip().upper()
                     lista_final.append(a)
-                    print(aviso.strip())
+                    #print(aviso.strip())
             controller.registrar_detalle_oferta(con, lista_final)
                 
     return lista_oferta

@@ -118,8 +118,8 @@ def delati_mipleo():
     carga["busqueda_area"] = MIPLEO["WS_AREA"]
     carga["busqueda"] = ""
     lista_puestos = controller.buscar_cargos(con)
-    n_puestos = len(lista_puestos)
-    for i in range(n_puestos):
+    n_puestos = len(lista_puestos) #lista_puestos
+    for i in range(1): #n_puestos
         carga["id_keyword"] = i+1
         set_url_busqueda_mipleo(carga,lista_puestos[i])
         carga["id_carga"] = controller.registrar_webscraping(con, carga)

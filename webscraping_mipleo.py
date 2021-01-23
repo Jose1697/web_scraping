@@ -91,7 +91,18 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
 
             reqDeta = requests.get(oferta["url"])            
             soup_deta = BeautifulSoup(reqDeta.content.decode('utf-8','ignore'), "lxml")
+            soup_deta2 = BeautifulSoup(reqDeta.content.decode('utf-8','ignore'), "lxml")
 
+            aviso_detaul = soup_deta2.find("div", {"class": "description_item"}).find("ul",{"class":"info_item"})
+            aviso_detali = aviso_detaul.findAll("li")
+            aviso_fecha_pub = aviso_detali[4].find("b")
+            fecha_publicacion = aviso_fecha_pub.get_text().split("-")
+            fecha_publicacion[0] = fecha_publicacion[0].strip()
+            fecha_partes=fecha_publicacion[0].split("/")
+            fecha_publicacion[0] = fecha_partes[2]+"-"+fecha_partes[1]+"-"+fecha_partes[0]
+            fecha_publicacion[1] = fecha_publicacion[1].strip()
+            oferta["fecha_publicacion"] = fecha_publicacion[0] 
+            
             aviso_deta = aviso_deta = soup_deta.find("div", {"class": "description_item"})
             
             if aviso_deta!=None:

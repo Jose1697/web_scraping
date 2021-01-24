@@ -81,7 +81,15 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             else:
                 oferta["lugar"]=''                
 
-            salario = arrZoneAd[1].replace('Salario: ','')  
+            salario = arrZoneAd[1].replace('Salario: ','')
+
+            time_publicacion=arrZoneAd[2]
+            
+            if time_publicacion!=None:                                            
+                oferta["timepublicacion"]=time_publicacion
+            else:
+                oferta["timepublicacion"]=''
+                
             #print(salario)    
             if salario!=None:                                            
                 oferta["salario"]=salario

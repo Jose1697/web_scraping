@@ -60,7 +60,7 @@ class DBOferta:
             cur = mydb.cursor()                                    
             sql = "insert into Oferta (id_webscraping, titulo,empresa,lugar,salario,oferta_detalle,url_oferta,url_pagina,fecha_publicacion,fecha_creacion,fecha_modificacion,time_publicacion) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,current_date,current_date,%s)"            
             params = (oferta["id_carga"], oferta["puesto"].strip(), oferta["empresa"].strip(), oferta["lugar"].strip(),oferta["salario"].strip(),oferta["detalle"].strip(), oferta["url"], oferta["url_pagina"], oferta["fecha_publicacion"], oferta["timepublicacion"])
-            cur.execute(sql, params)     
+            cur.execute(sql, params)   
             mydb.commit()            
 
 

@@ -77,8 +77,10 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             arrZoneAd = zoneAd.get_text().split('|')    
             
             lugar = arrZoneAd[0]
+            array_lugar = lugar.split("en")
+            ultimo = len(array_lugar)-1
             if lugar!=None:                                            
-                oferta["lugar"]=lugar
+                oferta["lugar"]=array_lugar[ultimo]
             else:
                 oferta["lugar"]=''                
 

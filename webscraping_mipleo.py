@@ -56,6 +56,9 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             lista_final=[]
            
             href = el.find("a")['href']
+            
+            if controller.validacion(con, href):
+                continue
 
             oferta["id_carga"] = id_carga
             

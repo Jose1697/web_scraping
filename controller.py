@@ -15,6 +15,11 @@ class Controller:
         lista_d = self.dbwebscraping.list_search(con)
         return lista_d
 
+    #Valida su el id(url) del aviso ya esta en la base de datos
+    def validacion(self, con ,url):
+        existe = self.dboferta.validar_oferta(con, url)
+        return existe
+
     def registrar_webscraping(self, con, webscraping):
         id = self.dbwebscraping.insert_webscraping(con, webscraping)
         return id

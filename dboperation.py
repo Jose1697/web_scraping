@@ -54,6 +54,30 @@ class DBOferta:
     def __init__(self):
         pass
 
+    #Valida ofertas repetidas
+    def validar_oferta(self, connection, url):
+        existe = False
+        print(url)
+        try:
+            mydb = connection.connect()
+            cur = mydb.cursor()   
+            sql = "select COUNT(*) from oferta where url_oferta='"+url+"'"
+            cur.execute(sql)
+            num = int(cur.fetchone()[0])
+            if num!=0:
+                print("hay {} ofertas repetidas".format(str(num)))
+                existe = True
+            # close the communication with the PostgreSQL
+            cur.close()
+            mydb.close()    
+
+        except (Exception, psycopg2.DatabaseError) as error:                
+                print ("-------------Exception, psycopg2.DatabaseError-------------------")
+                print (error)
+                mydb.close()        
+
+        return existe
+
     def insert_oferta(self, connection, oferta):        
         try:
             mydb = connection.connect()

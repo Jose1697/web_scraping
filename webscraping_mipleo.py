@@ -76,13 +76,13 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             arrZoneAd = []
             arrZoneAd = zoneAd.get_text().split('|')    
             
-            lugar = arrZoneAd[0]
-            array_lugar = lugar.split("en")
-            ultimo = len(array_lugar)-1
-            if lugar!=None:                                            
-                oferta["lugar"]=array_lugar[ultimo]
-            else:
-                oferta["lugar"]=''                
+            #lugar = arrZoneAd[0]
+            #array_lugar = lugar.split("en")
+            #ultimo = len(array_lugar)-1
+            #if lugar!=None:                                            
+            #    oferta["lugar"]=array_lugar[ultimo]
+            #else:
+            #    oferta["lugar"]=''                
 
             salario = arrZoneAd[1].replace('Salario: ','')  
             #print(salario)    
@@ -104,9 +104,17 @@ def scraping_ofertas(con, url_principal, prefix_url, sufix_url, pagina_inicial, 
             fecha_publicacion[0] = fecha_partes[2]+"-"+fecha_partes[1]+"-"+fecha_partes[0]
             fecha_publicacion[1] = fecha_publicacion[1].strip()
             oferta["fecha_publicacion"] = fecha_publicacion[0] 
-            
+
+
+            aviso_localidad = aviso_detali[3].find("b")
+            distrito = aviso_localidad.get_text().strip()
+
+            aviso_departamento = soup_deta2.find("div", {"class": "header_item"}).find("div").find("h2",{"class":"subtitle_item"})
+            array_depart = aviso_departamento.get_text().split(",")
+            departamento = array_depart[1].strip()
             aviso_deta = aviso_deta = soup_deta.find("div", {"class": "description_item"})
             
+            oferta["lugar"]=distrito + "(" + departamento + ")"
             if aviso_deta!=None:
                 str_aviso_deta =  aviso_deta.get_text()    
                 str_aviso_deta  = re.sub(

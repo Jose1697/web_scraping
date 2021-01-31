@@ -28,7 +28,7 @@ class DBWebscraping:
           mydb = connection.connect()         
           cur = mydb.cursor() 
           # insertando un registro
-          sql = "insert into webscraping (busqueda, busqueda_area, pagina_web, url_pagina, url_busqueda,fecha_creacion,fecha_modificacion,id_keyword) values (%s,%s,%s,%s,%s,current_date,current_date,%s)"
+          sql = "insert into webscraping (busqueda, busqueda_area, pagina_web, url_pagina, url_busqueda,fecha_creacion,fecha_modificacion,id_keyword,delati_team) values (%s,%s,%s,%s,%s,current_date,current_date,%s,'NOS VAN A GANAR')"
           params = (carga["busqueda"], carga["busqueda_area"], carga["pagina"], carga["url_principal"],carga["url_busqueda"],carga["id_keyword"])
                     
           cur.execute(sql, params)                 
@@ -61,7 +61,7 @@ class DBOferta:
         try:
             mydb = connection.connect()
             cur = mydb.cursor()   
-            sql = "select COUNT(*) from oferta where url_oferta='"+url+"'"
+            sql = "select COUNT(*) from oferta where url_oferta= '"+url+"' and id_estado is null"
             cur.execute(sql)
             num = int(cur.fetchone()[0])
             if num!=0:
